@@ -1,0 +1,36 @@
+name: Continues Deployment Main
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repository: Aabill/blog
+        token: ${{ secrets.GH_TOKEN }}
+        ref: main
+    - name: Set up Node
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+    - run: npm install
+    - run: npm run build
+    - name: Commit built assets
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git checkout -B deploy-main
+        git add -f dist/
+        git commit -m "Build Server"
+        git push -f origin deploy-main
+    - name: Deploy to Server
+      uses: appleboy/ssh-action@master
+      with:
+        username: aron
+        host: 165.232.162.154
+        script: 'cd /var/www/blog/ && sh deploy.sh'
+        key: ${{ secrets.ARON_PRIVATE_KEY }}
