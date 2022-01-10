@@ -4,12 +4,25 @@
 
 <template>
   <div class="max-w-7xl m-auto">
-    <div class=""></div>
-    <h1>{{ uid.length > 0 ? 'Create Page' : 'Sign In'}}</h1>
-    <div id="editorjs"></div>
+      <!-- <div class="text-xl font-bold">
+        <h1>{{ uid.length > 0 ? 'Create Page' : 'Sign In Noob!'}}</h1>
+      </div> -->
 
-    <button @click="uploadArticle()">Test Upload</button>
-    <button @click="firbaseAuthGH()">Firebase GH</button>
+      
+      <div v-if="uid.length > 0" class="p-3.5">
+          <h1 class="text-2xl font my-5">Create {{ $route.params.category}}</h1>
+          <hr>
+        <div id="editorjs" class="my-5"></div>
+        <div class="w-auto mx-auto text-center text-md lg:text-lg ">
+          <button class="max-w-xs bg-blue-500 text-gray-200 py-2 px-5 hover:bg-blue-600" v-if="uploadButton" @click="uploadArticle()">Post</button>
+        </div>
+      </div>
+      <div v-else>
+        <div class="w-full h-screen flex justify-center items-center">
+          <button @click="firbaseAuthGH()" class="w-full max-w-xs text-center p-3.5 bg-gray-600 text-white text-xl border-solid border rounded-lg">Sign in</button>
+        </div>
+      </div>
+    
   </div>
     
 </template>
@@ -45,6 +58,7 @@ export default defineComponent({
     data() {
       return {
         uid: "",
+        uploadButton: false
       }
     },
 components: {
@@ -151,7 +165,7 @@ components: {
         /**
           * onReady callback
           */
-        onReady: () => {console.log('Editor.js is ready to work!')},
+        onReady: () => { this.uploadButton = true},
         
         /**
           * onChange callback
