@@ -1,0 +1,10 @@
+{
+    "apiKey": "AIzaSyAZVK6op-54E0vE2mSdiqhnjMu71CgAnjw",
+    "authDomain": "blog-2b8ce.firebaseapp.com",
+    "databaseURL": "https://blog-2b8ce-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "projectId": "blog-2b8ce",
+    "storageBucket": "blog-2b8ce.appspot.com",
+    "messagingSenderId": "169210960796",
+    "appId": "1:169210960796:web:2c3a0067126e1fb875c659",
+    "measurementId": "${config.measurementId}"
+}
