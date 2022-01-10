@@ -18,13 +18,12 @@ jobs:
       with:
         node-version: '14.17.5'
     - run: npm install
-    - uses: actions/checkout@v2
-      - name: Find and Replace
-        uses: jacobtomlinson/gha-find-replace@v2
-        with:
-          find: "import {TooltipContent, TooltipOptions} from 'codex-tooltip'"
-          replace: "import { TooltipContent, TooltipOptions } from 'codex-tooltip/dist/types'"
-          regex: false
+    - name: Find and Replace
+      uses: jacobtomlinson/gha-find-replace@v2
+      with:
+        find: "import {TooltipContent, TooltipOptions} from 'codex-tooltip'"
+        replace: "import { TooltipContent, TooltipOptions } from 'codex-tooltip/dist/types'"
+        regex: false
     - run: npm run build
     - name: Commit built assets
       run: |
