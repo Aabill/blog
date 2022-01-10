@@ -18,6 +18,13 @@ jobs:
       with:
         node-version: '14.17.5'
     - run: npm install
+    - run: |
+        filename="node_modules/@editorjs/editorjs/types/api/tooltip.d.ts"
+        read -p "import {TooltipContent, TooltipOptions} from 'codex-tooltip'" search
+        read -p "import { TooltipContent, TooltipOptions } from 'codex-tooltip/dist/types'" replace
+        if [[ $search != "" && $replace != "" ]]; then
+        sed -i "s/$search/$replace/" $filename
+        fi
     - run: npm run build
     - name: Commit built assets
       run: |
