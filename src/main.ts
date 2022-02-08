@@ -10,8 +10,6 @@ import Landing from './pages/Landing.vue'
 import Create from './pages/Create.vue'
 import Blog from './pages/Blog.vue'
 import PageNotFound from './pages/PageNotFound.vue'
-import NNS from './pages/NNS.vue'
-
 
 const router = createRouter({
     history: createWebHistory(),
@@ -19,6 +17,7 @@ const router = createRouter({
         { path: '/', name: 'Landing', component: Landing },
         { path: '/post/:category', name: 'Post', component: Create },
         { path: '/read/:category/:id', name: 'Blog', component: Blog },
+        { path: '/edit/:category/:id', name: 'Edit', component: Create },
         { path: '/:pathMatch(.*)*', component: PageNotFound }
     ]
 })

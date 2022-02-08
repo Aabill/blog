@@ -3,7 +3,7 @@
 </script>
 
 <template>
-<div  class="max-w-7xl m-auto px-4 py-2 md:px-8 md:py-5">
+<div  :class="[ $route.params.category == 'nns' ? 'max-w-max mx-auto':  'max-w-7xl', 'm-auto px-4 py-2 md:px-8 md:py-5']">
     <div v-for="(block, index) in blocks" :key="index" >
         <div v-if="block.type == 'header'" class="mb-3 mt-3">
             <editor-header :level="block.data.level" :text="block.data.text" :pClass="'mb-2'"></editor-header>
@@ -15,7 +15,7 @@
             :captionClass="'text-sm md:text-lg transform -translate-y-7 translate-x-3 md:-translate-y-10 md:translate-x-5 bg-white bg-opacity-60 max-w-max px-2 italic rounded'"
             ></editor-image>
         </div>
-        <div v-if="block.type == 'paragraph'">
+        <div v-if="block.type == 'paragraph'" :class="$route.params.category == 'nns' ? 'pl-5': ''">
             <editor-paragraph :text="block.data.text"></editor-paragraph>
         </div>
     </div>
@@ -78,7 +78,6 @@ export default defineComponent({
                 const data = snapshot.val()
                 this.blocks = data.blocks
                 this.loading = false
-                console.log(this.blocks)
             })
         }
     }
