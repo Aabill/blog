@@ -3,17 +3,23 @@
 </script>
 
 <template>
-    <div v-for="(block, index) in blocks" :key="index" class="max-w-7xl m-auto">
-        <div v-if="block.type == 'header'">
-            <editor-header :level="block.data.level" :text="block.data.text" ></editor-header>
+<div  class="max-w-7xl m-auto px-4 py-2 md:px-8 md:py-5">
+    <div v-for="(block, index) in blocks" :key="index" >
+        <div v-if="block.type == 'header'" class="mb-3 mt-3">
+            <editor-header :level="block.data.level" :text="block.data.text" :pClass="'mb-2'"></editor-header>
+            <hr>
         </div>
+        
         <div v-if="block.type == 'image'">
-            <editor-image :caption="block.data.caption" :url="block.data.file.url"></editor-image>
+            <editor-image :caption="block.data.caption" :url="block.data.file.url" 
+            :captionClass="'text-sm md:text-lg transform -translate-y-7 translate-x-3 md:-translate-y-10 md:translate-x-5 bg-white bg-opacity-60 max-w-max px-2 italic rounded'"
+            ></editor-image>
         </div>
         <div v-if="block.type == 'paragraph'">
             <editor-paragraph :text="block.data.text"></editor-paragraph>
         </div>
     </div>
+</div>
 </template>
 
 

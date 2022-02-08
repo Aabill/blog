@@ -1,5 +1,5 @@
 <template>
-    <p :class="['text-base text-left md:text-lg', pClass]" v-html="text"></p>
+    <p :class="['text-left text-sm md:text-lg', pClass]" v-html="text"></p>
 </template>
 
 <script lang="ts">

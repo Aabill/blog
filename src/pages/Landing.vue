@@ -9,23 +9,30 @@
         </div>
         <div class="px-2 py-3 my-1">
             <h1 class="text-xl font-bold">Latest Blog</h1>
-            <div v-for="(blog, key, index) in blogs" :key="index">
+            <div v-for="(blog, keyBlog, index) in blogs" :key="index">
                 <div v-if="index == Object.keys(blogs).length - 1">
-                    <div class="mx-3 " v-for="(block, index) in blog.blocks" :key="index">
-                        <h1 class="my-3 text-lg" v-if="block.type == 'header'" v-html="block.data.text"></h1>
-                        <div class="md:max-w-lg">
-                            <div v-if="block.type == 'image'">
-                                <editor-image class="md:max-w-lg" :captionClass="'italic mt-2 transform -translate-y-10 z-10 text-white text-right pr-3'" :imgClass="'md:max-w-lg'" :caption="block.data.caption" :url="block.data.file.url"></editor-image>
+                    
+                        <div :class="['mx-3 blocks', block.type ]" v-for="(block, index) in blog.blocks" :key="index">
+                            
+                            <h1 class="my-3 text-lg" v-if="block.type == 'header'"> <a :href="`/read/blogs/${keyBlog}`"><span class="hover:underline" v-html="block.data.text"></span></a></h1>
+                            
+                            <div class="md:max-w-lg relative">
+                                <div v-if="block.type == 'image'">
+                                    <a :href="`/read/blogs/${keyBlog}`">
+                                        <editor-image class="md:max-w-lg" :textClass="'bg-black bg-opacity-40 px-1 rounded'" :captionClass="'italic mt-2 transform -translate-y-10 z-10 text-white text-right pr-3 text-shadow'" :imgClass="'md:max-w-lg rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 transition-all'" :caption="block.data.caption" :url="block.data.file.url"></editor-image>
+                                    </a>
+                                </div>
+                                <div v-if="block.type == 'paragraph'">
+                                    <editor-paragraph class="absolute bottom-20 text-white px-5" :pClass="'excerpt text-shadow pointer-events-none'" :text="block.data.text"></editor-paragraph>
+                                </div>
                             </div>
-                            <div v-if="block.type == 'paragraph'">
-                                <editor-paragraph class="transform -translate-y-40 text-gray-200 px-5" :pClass="'excerpt'" :text="block.data.text"></editor-paragraph>
-                            </div>
+                            
                         </div>
-                        
-                    </div>
                 </div>
+                
             </div>
-            <h1 class="text-xl font-bold">Latest Nashville Number System</h1>
+            <hr class="md:max-w-lg">
+            <h1 class="mt-10 text-xl font-bold">Latest Nashville Number System</h1>
             <div v-for="(blog, keyBlog, index) in nns" :key="index">
                 <div v-if="index == Object.keys(nns).length - 1">
                     <div class="mx-3 " v-for="(block,key, index) in blog.blocks" :key="index">
@@ -49,9 +56,20 @@
 .excerpt {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 3;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
 }
+.text-shadow {
+    text-shadow: 0px 1px 3px black;
+}
+
+.blocks.paragraph ~ .blocks.paragraph{
+    display: none;
+}
+.blocks.paragraph {
+    display: block;
+}
+
 </style>
 
 
