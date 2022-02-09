@@ -1,8 +1,13 @@
 <template>
-    <div>
-        <img @load="loading=false" :class="[imgClass]" :src="url" :alt="caption">
-        <span v-if="loading" class="animate-spin h-5 w-5 mr-3"></span>
-        <p :class="captionClass"><span :class="textClass" v-text="caption"></span></p>
+    <div >
+        <div v-show="!show" :class="['h-40 md:h-64 flex justify-center items-center', imgClass]">
+            <img src="/loader.svg" class="h-10 w-10">
+        </div>
+        <div v-show="show">
+            <img @load="show=true" :class="[imgClass]" :src="url" :alt="caption">
+            
+            <p :class="captionClass"><span :class="textClass" v-text="caption"></span></p>
+        </div>
     </div>
 </template>
 
@@ -13,7 +18,8 @@ export default defineComponent({
     name: 'editorjs-image',
     data() {
         return {
-            loading: true
+            loading: true,
+            show: false
         }
     }
 })

@@ -20,7 +20,7 @@
                                 <editor-image class="md:max-w-lg" :textClass="'bg-black bg-opacity-40 px-1 rounded'" :captionClass="'italic mt-2 transform -translate-y-10 z-10 text-white text-right pr-3 text-shadow'" :imgClass="'md:max-w-lg rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 transition-all'" :caption="block.data.caption" :url="block.data.file.url"></editor-image>
                             </a>
                         </div>
-                        <div v-if="block.type == 'paragraph'">
+                        <div v-if="block.type == 'paragraph'" >
                             <editor-paragraph class="absolute bottom-20 text-white px-5" :pClass="'excerpt text-shadow pointer-events-none'" :text="block.data.text"></editor-paragraph>
                         </div>
                     </div>
@@ -111,14 +111,12 @@ export default defineComponent({
         Blogs.then( (res) => {
             let rev = this.dict_reverse(res)
             this.blogs = rev;
-            console.log(this.blogs)
         })
         const NNS = this.getPosts('nns');
         NNS.then( (res) => {
             let rev = this.dict_reverse(res)
             this.nns = rev;
         })
-
         
         
     },
