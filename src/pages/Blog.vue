@@ -3,10 +3,11 @@
 </script>
 
 <template>
+
 <div  :class="[ $route.params.category == 'nns' ? 'max-w-max mx-auto':  'max-w-7xl', 'm-auto px-4 py-2 md:px-8 md:py-5']">
     <div v-for="(block, index) in blocks" :key="index" >
-        <div v-if="block.type == 'header'" class="mb-3 mt-3">
-            <editor-header :level="block.data.level" :text="block.data.text" :pClass="'mb-2'"></editor-header>
+        <div v-if="block.type == 'header'" :class="['mb-3 mt-3', $route.params.category == 'nns' ? 'max-w-max mx-auto' : '']">
+            <editor-header :level="block.data.level" :text="block.data.text" :pClass="'mb-2 mx-5'"></editor-header>
             <hr>
         </div>
         

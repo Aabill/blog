@@ -9,42 +9,29 @@
         </div>
         <div class="px-2 py-3 my-1">
             <h1 class="text-xl font-bold">Latest Blog</h1>
-            <div v-for="(blog, keyBlog, index) in blogs" :key="index">
-                <div v-if="index == Object.keys(blogs).length - 1">
+            <div v-for="(blog, index) in blogs" :key="index">
+                <div :class="['mx-3 blocks', block.type ]" v-for="(block, key, index) in blog[Object.keys(blog)[0]].blocks" :key="index">
                     
-                        <div :class="['mx-3 blocks', block.type ]" v-for="(block, index) in blog.blocks" :key="index">
-                            
-                            <h1 class="my-3 text-lg" v-if="block.type == 'header'"> <a :href="`/read/blogs/${keyBlog}`"><span class="hover:underline" v-html="block.data.text"></span></a></h1>
-                            
-                            <div class="md:max-w-lg relative">
-                                <div v-if="block.type == 'image'">
-                                    <a :href="`/read/blogs/${keyBlog}`">
-                                        <editor-image class="md:max-w-lg" :textClass="'bg-black bg-opacity-40 px-1 rounded'" :captionClass="'italic mt-2 transform -translate-y-10 z-10 text-white text-right pr-3 text-shadow'" :imgClass="'md:max-w-lg rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 transition-all'" :caption="block.data.caption" :url="block.data.file.url"></editor-image>
-                                    </a>
-                                </div>
-                                <div v-if="block.type == 'paragraph'">
-                                    <editor-paragraph class="absolute bottom-20 text-white px-5" :pClass="'excerpt text-shadow pointer-events-none'" :text="block.data.text"></editor-paragraph>
-                                </div>
-                            </div>
-                            
+                    <h1 class="my-3 text-lg" v-if="block.type == 'header'"> <a :href="`/read/blogs/${Object.keys(blog)[0]}`"><span class="hover:underline" v-html="block.data.text"></span></a></h1>
+                    
+                    <div class="md:max-w-lg relative">
+                        <div v-if="block.type == 'image'">
+                            <a :href="`/read/blogs/${Object.keys(blog)[0]}`">
+                                <editor-image class="md:max-w-lg" :textClass="'bg-black bg-opacity-40 px-1 rounded'" :captionClass="'italic mt-2 transform -translate-y-10 z-10 text-white text-right pr-3 text-shadow'" :imgClass="'md:max-w-lg rounded-xl shadow-xl hover:shadow-2xl transform hover:-translate-y-0.5 transition-all'" :caption="block.data.caption" :url="block.data.file.url"></editor-image>
+                            </a>
                         </div>
+                        <div v-if="block.type == 'paragraph'">
+                            <editor-paragraph class="absolute bottom-20 text-white px-5" :pClass="'excerpt text-shadow pointer-events-none'" :text="block.data.text"></editor-paragraph>
+                        </div>
+                    </div>
                 </div>
-                
             </div>
             <hr class="md:max-w-lg">
             <h1 class="mt-10 text-xl font-bold">Latest Nashville Number System</h1>
             <div v-for="(blog, keyBlog, index) in nns" :key="index">
-                <div v-if="index == Object.keys(nns).length - 1">
-                    <div class="mx-3 " v-for="(block,key, index) in blog.blocks" :key="index">
-                        <div class="my-3 text-lg" v-if="block.type == 'header'">
-                            <a class="text-blue-700 underline" :href="`/read/nns/${keyBlog}`" v-html="block.data.text"></a>
-                        </div>
-                        <!-- <div class="md:max-w-lg">
-                            <div v-if="block.type == 'paragraph'">
-                                <editor-paragraph class="px-5" :pClass="''" :text="block.data.text"></editor-paragraph>
-                            </div>
-                        </div> -->
-                        
+                <div class="mx-3 " v-for="(block,key, index) in blog[Object.keys(blog)[0]].blocks" :key="index">
+                    <div class="my-3 text-lg" v-if="block.type == 'header'">
+                        <a class="text-blue-700 underline" :href="`/read/nns/${Object.keys(blog)[0]}`" v-html="block.data.text"></a>
                     </div>
                 </div>
             </div>
@@ -78,15 +65,15 @@
 import { defineComponent, ref as Vref, computed, onMounted } from 'vue'
 import { initializeApp } from 'firebase/app'
 import firebaseConfig from "../../firebase.config.json";
-import { getDatabase, ref, child, get, limitToLast, query } from 'firebase/database'
+import { getDatabase, ref, child, get, limitToLast, query, limitToFirst, orderByChild, orderByKey } from 'firebase/database'
 
 import editorImage from "../components/EditorJS/image.vue"
 import editorParagraph from "../components/EditorJS/paragraph.vue"
 
 
 interface editorBlock {
-  default: {
-      type: string,
+    default:{
+        type: string,
       data: {
           level: number,
           text: string,
@@ -95,14 +82,17 @@ interface editorBlock {
             url: string
           }
       }
-  }
+    }
+      
 }
 
-interface blogs {
-        default: {
-            blocks: editorBlock
-        }
+interface blog {
+    [index:string]: {
+        blocks: editorBlock,
+    }
 }
+interface blogs extends Array<blog>{}
+
 export default defineComponent({
     components: {
         editorImage,
@@ -119,12 +109,14 @@ export default defineComponent({
         
         const Blogs = this.getPosts('blogs')
         Blogs.then( (res) => {
-            this.blogs = res;
+            let rev = this.dict_reverse(res)
+            this.blogs = rev;
+            console.log(this.blogs)
         })
         const NNS = this.getPosts('nns');
         NNS.then( (res) => {
-            this.nns = res;
-            console.log(res)
+            let rev = this.dict_reverse(res)
+            this.nns = rev;
         })
 
         
@@ -133,8 +125,8 @@ export default defineComponent({
     methods: {
         async  getPosts( refDB: string ) : Promise<blogs> {
             const app = initializeApp(firebaseConfig)
-            const dbRef = ref(getDatabase(app));
-            const recentPosts = query(child(dbRef, `${refDB}`), limitToLast(5));
+            const dbRef = ref(getDatabase(app), `${refDB}`); 
+            const recentPosts = query(dbRef, limitToLast(5));
             const wew = await get(recentPosts).then((snapshot) => {
             if (snapshot.exists()) {
                 return snapshot.val()
@@ -143,9 +135,22 @@ export default defineComponent({
             }
             }).catch((error) => {
                 console.log(error)
-                
             });
             return wew;
+        },
+        dict_reverse(obj: blogs) {
+            let new_obj = {} as blogs;
+            let rev_obj = Object.keys(obj).reverse();
+            
+            let wew : any = Object.keys(obj).map(function(key, index) {
+                let wew : any = rev_obj[index];
+                let what = {
+                    [wew] : obj[wew]
+                };
+                return what;
+            });
+            new_obj = wew;
+            return new_obj;
         }
     }
     
