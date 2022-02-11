@@ -238,14 +238,7 @@ export default defineComponent({
       const postListRef = ref(db, `${this.$route.params.category}`);
       const newPostRef = push(postListRef);
       set(newPostRef, saved).then(() => {
-        // const db = getDatabase();
-        // const commentsRef = ref(db, `users/${this.uid}/posts`);
-        // onChildAdded(commentsRef, (data) => {
-        //   // addCommentElement(postElement, data.key, data.val().text, data.val().author);
-        //   console.log(data);
-        // });
-        console.log(newPostRef.key);
-        this.$router.push(`/${this.$route.params.category}/${newPostRef.key}`);
+        window.location.href = `/read/${this.$route.params.category}/${newPostRef.key}`;
       });
     },
     async updateArticle() {
@@ -255,7 +248,7 @@ export default defineComponent({
       set(ref(db,`${this.$route.params.category}/${this.$route.params.id}`), saved)
       .then(()=> {
         // Data saved successfully
-        this.$router.push(`/read/${this.$route.params.category}/${this.$route.params.id}`)
+        window.location.href = `/read/${this.$route.params.category}/${this.$route.params.id}`
       })
       .catch((err)=> {
         // Write failed...
